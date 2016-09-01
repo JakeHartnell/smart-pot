@@ -35,8 +35,8 @@ board.on('ready', function start() {
         },
         port: 443,
         ssl: true,
-        name: 'Smartpot V1', // The display name for the thing.
-        desription: 'A self watering, self lighting pot with sensors!',
+        name: 'Lamp', // The display name for the thing.
+        desription: 'A lamp!',
         // TODO: SWAP WITH UUID
         username: 'jake.hartnell@gmail.com', // The username of the account you want this device to be added to.
         properties: {

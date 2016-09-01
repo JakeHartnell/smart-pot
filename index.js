@@ -11,10 +11,10 @@ var board = new five.Board({
 // When board emits a 'ready' event run this start function.
 board.on('ready', function start() {
     // Define variables
-    var light = new five.Relay(54),
-        waterpump = new five.Relay(55);
+    var light = new five.Relay(54);
+    // var waterpump = new five.Relay(55);
 
-    waterpump.close();
+    // waterpump.close();
 
     // http://johnny-five.io/examples/multi-mpl3115a2/
     // multi = new five.Multi({
@@ -59,32 +59,32 @@ board.on('ready', function start() {
                     light.close();
                     smartpot.set('state', 'off');
                 }
-            },
-            water_plant: {
-                name: 'Water plant',
-                // IDEA: properties in the params object are supported with rest?
-                // params: {
-                //     duration: {
-                //         type: Number,
-                //         value: 10000
-                //     }
-                // },
-                // To do support writing duration with Params
-                duration: 10000,
-                schedule: 'every 3 hours', // (UTC timezone)
-                function: function (duration) {
-                    console.log('Watering plant');
-                    // If duration is not defined, get the document default.
-                    if (_.isUndefined(duration)) {
-                        var duration = Number(smartpot.get('duration', 'water_plant'));
-                    }
-                    waterpump.open();
-                    // TODO: test if this works
-                    smartpot.schedule(function () {
-                        waterpump.close();
-                    }, duration);
-                }
             }
+            // water_plant: {
+            //     name: 'Water plant',
+            //     // IDEA: properties in the params object are supported with rest?
+            //     // params: {
+            //     //     duration: {
+            //     //         type: Number,
+            //     //         value: 10000
+            //     //     }
+            //     // },
+            //     // To do support writing duration with Params
+            //     duration: 10000,
+            //     schedule: 'every 3 hours', // (UTC timezone)
+            //     function: function (duration) {
+            //         console.log('Watering plant');
+            //         // If duration is not defined, get the document default.
+            //         if (_.isUndefined(duration)) {
+            //             var duration = Number(smartpot.get('duration', 'water_plant'));
+            //         }
+            //         waterpump.open();
+            //         // TODO: test if this works
+            //         smartpot.schedule(function () {
+            //             waterpump.close();
+            //         }, duration);
+            //     }
+            // }
         }
         // events: {
         //     temp_data: {

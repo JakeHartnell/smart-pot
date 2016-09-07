@@ -82,10 +82,12 @@ try {
                     threshold: 100,
                     schedule: 'every 1 second',
                     function: function () {
-                        smartpot.log({
-                          type: 'light',
-                          value: lightSensor.value
-                        });
+                        // smartpot.log({
+                        //   type: 'light',
+                        //   value: lightSensor.value
+                        // });
+
+                        console.log(lightSensor.value);
 
                         var threshold = smartpot.get('threshold', 'light_data');
                         if ((lightSensor.value < threshold) && (smartpot.get('lightconditions') != 'dark')) {

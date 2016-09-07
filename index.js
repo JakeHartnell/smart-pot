@@ -19,7 +19,7 @@ try {
 
         waterpump.close();
 
-        mainlights.open();
+        mainlights.close();
 
         // todo: set date by server.
         // New api?
@@ -50,6 +50,7 @@ try {
                     schedule: 'at 16:00', // Optional scheduling using later.js (UTC timezone)
                     function: function () {
                         light.open();
+                        mainlights.close();
                         smartpot.set('state', 'on');
                     }
                 },
@@ -58,6 +59,7 @@ try {
                     schedule: 'at 04:33', // (UTC timezone)
                     function: function () {
                         light.close();
+                        mainlights.open();
                         smartpot.set('state', 'off');
                     }
                 },

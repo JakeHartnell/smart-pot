@@ -32,8 +32,8 @@ try {
             },
             port: 443,
             ssl: true,
-            name: 'Lamp', // The display name for the thing.
-            desription: 'A lamp!',
+            name: 'Smartpot plus lamp and light sensor!', // The display name for the thing.
+            desription: 'See name...',
             // TODO: SWAP WITH UUID
             username: 'jake.hartnell@gmail.com', // The username of the account you want this device to be added to.
             properties: {
@@ -65,9 +65,7 @@ try {
                     function: function (duration) {
                         console.log('Watering plant');
                         // If duration is not defined, get the document default.
-                        if (_.isUndefined(duration)) {
-                            var duration = Number(smartpot.get('duration', 'water_plant'));
-                        }
+                        var duration = Number(smartpot.get('duration', 'water_plant'));
                         waterpump.open();
                         // TODO: test if this works
                         smartpot.schedule(function () {

@@ -15,8 +15,11 @@ try {
         var light = new five.Relay(54);
         var waterpump = new five.Relay(55);
         var lightSensor = new five.Sensor(51);
+        var mainlights = new five.Relay(57);
 
         waterpump.close();
+
+        mainlights.open();
 
         // todo: set date by server.
         // New api?
@@ -32,8 +35,8 @@ try {
             },
             port: 443,
             ssl: true,
-            name: 'Smartpot plus lamp and light sensor!', // The display name for the thing.
-            desription: 'See name...',
+            name: 'Smartpot and light controller!', // The display name for the thing.
+            desription: 'Two things merged into one.',
             // TODO: SWAP WITH UUID
             username: 'jake.hartnell@gmail.com', // The username of the account you want this device to be added to.
             properties: {

@@ -79,25 +79,30 @@ try {
                     name: 'Light data', 
                     type: 'light', // Currently need for visualization component... HACK.
                     template: 'sensor',
-                    threshold: 100,
+                    threshold: 12,
                     schedule: 'every 1 second',
                     function: function () {
-                        // smartpot.log({
-                        //   type: 'light',
-                        //   value: lightSensor.value
-                        // });
+                        try {
+                            var value = (60 - Number(lightSensor.value)) * 5 / 3;
+                            smartpot.log({
+                              type: 'light',
+                              value: value
+                            });
 
-                        console.log(lightSensor.value);
+                            console.log(value);
 
-                        var threshold = smartpot.get('threshold', 'light_data');
-                        if ((lightSensor.value < threshold) && (smartpot.get('lightconditions') != 'dark')) {
-                            smartpot.emitEvent('dark')
-                                    .set('lightconditions', 'dark')
-                                    .call('turn_light_on');
-                        } else if ((lightSensor.value >= threshold) && (smartpot.get('lightconditions') != 'light')) {
-                            smartpot.emitEvent('light')
-                                    .set('lightconditions', 'light')
-                                    .call('turn_light_off');
+                            var threshold = smartpot.get('threshold', 'light_data');
+                            if ((value < threshold) && (smartpot.get('lightconditions') != 'dark')) {
+                                smartpot.emitEvent('dark')
+                                        .set('lightconditions', 'dark')
+                                        .call('turn_light_on');
+                            } else if ((value >= threshold) && (smartpot.get('lightconditions') != 'light')) {
+                                smartpot.emitEvent('light')
+                                        .set('lightconditions', 'light')
+                                        .call('turn_light_off');
+                            }
+                        } catch (err) {
+                            console.log(err);
                         }
                     }
                 }

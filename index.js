@@ -19,10 +19,7 @@ try {
 
         waterpump.close();
 
-        mainlights.close();
-
         // todo: set date by server.
-        // New api?
         console.log(new Date());
 
         // Create a new grow instance.
@@ -50,7 +47,7 @@ try {
                     schedule: 'at 16:00', // Optional scheduling using later.js (UTC timezone)
                     function: function () {
                         light.open();
-                        mainlights.close();
+                        // mainlights.close();
                         smartpot.set('state', 'on');
                     }
                 },
@@ -59,7 +56,7 @@ try {
                     schedule: 'at 04:33', // (UTC timezone)
                     function: function () {
                         light.close();
-                        mainlights.open();
+                        // mainlights.open();
                         smartpot.set('state', 'off');
                     }
                 },
@@ -93,8 +90,6 @@ try {
                               type: 'light',
                               value: value
                             });
-
-                            console.log(value);
 
                             var threshold = smartpot.get('threshold', 'light_data');
                             if ((value < threshold) && (smartpot.get('lightconditions') != 'dark')) {

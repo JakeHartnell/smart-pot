@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "Grow.js": "^0.2.8",
+    "Grow.js": "^0.2.98",
     "johnny-five": "^0.10.0",
     "chip-io": "^2.0.0"
   }

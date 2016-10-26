@@ -8,108 +8,55 @@ var board = new five.Board({
     io: new Chip()
 });
 
-try {
-    // When board emits a 'ready' event run this start function.
-    board.on('ready', function start() {
-        // Define variables
-        var light = new five.Relay(54);
-        var waterpump = new five.Relay(55);
-        var lightSensor = new five.Sensor(51);
-        var mainlights = new five.Relay(57);
+// When board emits a 'ready' event run this start function.
+board.on('ready', function start() {
+    // Define variables
+    var light = new five.Relay(54);
+    var waterpump = new five.Relay(55);
+    var lightSensor = new five.Sensor(51);
+    var mainlights = new five.Relay(57);
 
-        waterpump.close();
+    waterpump.close();
 
-        // todo: set date by server.
-        console.log(new Date());
+    // Create a new grow instance.
+    var smartpot = new GrowBot({
+        uuid: '92169977-3ead-4f17-bebd-2e2503ebeee8',
+        token: 'nbBynG8Yhi8W7yurdoPZMnWqanF2b8Ms',
+        properties: {
+            state: 'off',
+            lightconditions: null
+        },
 
-        // Create a new grow instance.
-        var smartpot = new GrowBot({
-            host: "grow.commongarden.org",
-            tlsOpts: {
-                tls: {
-                    servername: "galaxy.meteor.com"
-                }
-            },
-            port: 443,
-            ssl: true,
-            name: 'Smartpot and light controller!', // The display name for the thing.
-            desription: 'Two things merged into one.',
-            // TODO: SWAP WITH UUID
-            username: 'jake.hartnell@gmail.com', // The username of the account you want this device to be added to.
-            properties: {
-                state: 'off',
-                lightconditions: null
-            },
-            actions: {
-                turn_light_on: {
-                    name: 'On', // Display name for the action
-                    description: 'Turns the light on.', // Optional description
-                    schedule: 'at 16:00', // Optional scheduling using later.js (UTC timezone)
-                    function: function () {
-                        light.open();
-                        // mainlights.close();
-                        smartpot.set('state', 'on');
-                    }
-                },
-                turn_light_off: {
-                    name: 'off',
-                    schedule: 'at 04:33', // (UTC timezone)
-                    function: function () {
-                        light.close();
-                        // mainlights.open();
-                        smartpot.set('state', 'off');
-                    }
-                },
-                water_plant: {
-                    name: 'Water plant',
-                    duration: 10000,
-                    schedule: 'every 3 hours', // (UTC timezone)
-                    function: function (duration) {
-                        console.log('Watering plant');
-                        // If duration is not defined, get the document default.
-                        var duration = Number(smartpot.get('duration', 'water_plant'));
-                        waterpump.open();
-                        // TODO: test if this works
-                        smartpot.schedule(function () {
-                            waterpump.close();
-                        }, duration);
-                    }
-                }
-            },
-            events: {
-                light_data: {
-                    name: 'Light data', 
-                    type: 'light', // Currently need for visualization component... HACK.
-                    template: 'sensor',
-                    threshold: 12,
-                    schedule: 'every 1 second',
-                    function: function () {
-                        try {
-                            var value = (60 - Number(lightSensor.value)) * 5 / 3;
-                            smartpot.log({
-                              type: 'light',
-                              value: value
-                            });
+        turn_light_on: function () {
+            light.open();
+            // mainlights.close();
+            smartpot.set('state', 'on');
+        },
 
-                            var threshold = smartpot.get('threshold', 'light_data');
-                            if ((value < threshold) && (smartpot.get('lightconditions') != 'dark')) {
-                                smartpot.emitEvent('dark')
-                                        .set('lightconditions', 'dark')
-                                        .call('turn_light_on');
-                            } else if ((value >= threshold) && (smartpot.get('lightconditions') != 'light')) {
-                                smartpot.emitEvent('light')
-                                        .set('lightconditions', 'light')
-                                        .call('turn_light_off');
-                            }
-                        } catch (err) {
-                            console.log(err);
-                        }
-                    }
-                }
-            }
-        });
+        turn_light_off: function () {
+                light.close();
+                // mainlights.open();
+                smartpot.set('state', 'off');
+        },
+        water_plant: function (duration) {
+            console.log('Watering plant');
+            // If duration is not defined, get the document default.
+            waterpump.open();
+            // TODO: test if this works
+            smartpot.schedule(function () {
+                waterpump.close();
+            }, duration);
+        }
     });
-} catch (err) {
-    console.log(err);
-}
 
+    smartpot.connect({
+        host: "grow.commongarden.org",
+        tlsOpts: {
+          tls: {
+            servername: "galaxy.meteor.com"
+          }
+        },
+        port: 443,
+        ssl: true
+    });
+});

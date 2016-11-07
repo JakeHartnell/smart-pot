@@ -1,27 +1,25 @@
 // Require the Grow.js build and johnny-five library.
 var GrowBot = require('Grow.js');
 var five = require('johnny-five');
-var Chip = require('chip-io');
+// var Chip = require('chip-io');
 
-// Create a new board object
-var board = new five.Board({
-    io: new Chip()
-});
+// // Create a new board object
+var board = new five.Board();
 
 // When board emits a 'ready' event run this start function.
 board.on('ready', function start() {
     // Define variables
-    var light = new five.Relay(54);
-    var waterpump = new five.Relay(55);
-    var lightSensor = new five.Sensor(51);
-    var mainlights = new five.Relay(57);
+    var light = new five.Relay(13);
+    var waterpump = new five.Relay(12);
 
     waterpump.close();
 
     // Create a new grow instance.
     var smartpot = new GrowBot({
-        uuid: '92169977-3ead-4f17-bebd-2e2503ebeee8',
-        token: 'nbBynG8Yhi8W7yurdoPZMnWqanF2b8Ms',
+        uuid: '4f85fc92-1586-4dcf-bb9f-1066f958d386',
+        token: 'PTvyf7AzsJAkJ4jvfLvZip6qJGJQLSZY',
+        webcomponent: 'smart-pot',
+        smartPot: true, // Hack.
         properties: {
             state: 'off',
             lightconditions: null
@@ -29,27 +27,26 @@ board.on('ready', function start() {
 
         turn_light_on: function () {
             light.open();
-            // mainlights.close();
-            smartpot.set('state', 'on');
+            // smartpot.set('state', 'on');
         },
 
         turn_light_off: function () {
-                light.close();
-                // mainlights.open();
-                smartpot.set('state', 'off');
+            light.close();
+            // smartpot.set('state', 'off');
         },
         water_plant: function (duration) {
-            console.log('Watering plant');
+            console.log('Watering plant: ' + duration);
             // If duration is not defined, get the document default.
             waterpump.open();
             // TODO: test if this works
-            smartpot.schedule(function () {
+            setTimeout(function () {
                 waterpump.close();
-            }, duration);
+            }, 10000);
         }
     });
 
-    smartpot.connect({
+    smartpot.connect(
+    {
         host: "grow.commongarden.org",
         tlsOpts: {
           tls: {
@@ -58,5 +55,6 @@ board.on('ready', function start() {
         },
         port: 443,
         ssl: true
-    });
+    }
+    );
 });
